@@ -3,13 +3,24 @@ import * as d3 from "d3"; //d3 is inside the node_modules folder; in library of 
 export default class BarDisplay{
     constructor(){ //constructor is a function that gets call automatically 
 
-        this.w = 300;
-        this.h = 100;
+        this.w = 1200;
+        this.h = 900;
         this.padding = 2;
-        this.dataset = [50,10,14,20,25];
+        //get the data from the data.json
+        //this.dataset = data;
 
         //build a new function
-        this.buildChart();
+        //this.buildChart();
+        this.fetchData();
+    }
+
+    fetchData(){
+        fetch('data.json')
+        .then(data => data.json())
+        .then(data => {
+            this.data = data;
+            console.log(this.data);
+        })
     }
 
     buildChart(){
@@ -19,7 +30,7 @@ export default class BarDisplay{
             .attr("height", this.h);
 
         svg.selectAll("rect")
-            .data(this.dataset)
+            .data(this.precip)
             .enter()//starts looping process
             .append("rect")
                 .attr("x",(d,i) => i *(this.w/this.dataset.length))//d = data, and i = element
@@ -28,5 +39,4 @@ export default class BarDisplay{
                 .attr("height", d => d)
                 .attr("fill", d => `rgb(&{d*10},0,0)`)
     }
-
 }
