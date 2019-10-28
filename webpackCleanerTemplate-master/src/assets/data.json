@@ -1,4 +1,58 @@
 { "data":[
+    
+    
+    {
+    "year": 1981,
+    "precip": 27,
+    "temp": 2.7
+},
+{
+    "year":1982,
+    "precip": 24,
+    "temp": -0.8
+},
+{
+    "year":1983,
+    "precip": -3,
+    "temp": -0.3
+},
+{
+    "year":1984,
+    "precip": 26,
+    "temp": 0.2
+},
+{
+    "year":1985,
+    "precip": 24,
+    "temp": 1.2
+},
+{
+    "year":1986,
+    "precip": -16,
+    "temp": -2.9
+},
+{
+    "year":1987,
+    "precip": -8,
+    "temp": 0.5
+},
+{
+    "year":1988,
+    "precip":13,
+    "temp": 1.9
+},
+{
+    "year":1989,
+    "precip": 17,
+    "temp": -0.1
+},
+{
+    "year":1990,
+    "precip":-13,
+    "temp": -0.9
+},
+    
+    
     {
     "year": 1991,
     "precip": 19,
