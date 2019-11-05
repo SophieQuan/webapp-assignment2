@@ -22,7 +22,7 @@ export default class BarDisplay {
         //since fetch data from index.js is not working - we put it back inside here
         this.fetchData();
     }
-    //starting to build the chart
+    //starting to build the chart 
 startChart() {
     //checking to see if the data array is showing up - USED FOR DEBUG
     //console.log(this.dataset);
@@ -65,7 +65,7 @@ startChart() {
     // append the new group of the rect (bars)
     svg.append('g')
         .attr('transform', function(d) {
-            return 'translate(32, 0)';
+            return 'translate(32, -510)';
         })
         //create the rects
         .selectAll("rect")
@@ -111,7 +111,7 @@ startChart() {
             //make the text go to the proper positions
             .append("text")
                     //move the text over to be on top the bar - the middle of the bar
-                    .attr('transform', 'translate(30, 0)')
+                    .attr('transform', 'translate(30, -510)')
                     //make the text be the label of the precipitation its on
                     .text(d => d.precip)
                     //get the x attribute to be 10 higher than the bar
@@ -133,13 +133,15 @@ startChart() {
     // append the group of nums and insert x axis
     svg.append('g')
     .attr('class','xlabel')
-    .attr('transform', 'translate(32, 300)')
+    //move it to bottom of y axis
+    .attr('transform', 'translate(32, 550)')
     //call the x axis
     .call(xAxis);
 
     // append the group of nums and insert y axis
     svg.append('g')
-    .attr('transform', 'translate(30, 0)')
+    //move up the page
+    .attr('transform', 'translate(30, -550)')
     //call the y axis
     .call(yAxis);
 
