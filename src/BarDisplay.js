@@ -3,11 +3,12 @@
 // LINE 122 TO CHANGE THE FONTS FOR LABELS
 // LINE 90 TO CHANGE THE COLOURS OF THE BARS USING RGBA
 // TO DO LIST: 
-// 1. The years scale is in the wrong spot
-// 2. Can we make the bars thicker?
-// 3. Change the scale to show every year instead of going by 5
-// 4. Add a legend
-// 5. Line Chart - working on this now
+// 1. Can we make the bars thicker?
+// 2. Add a legend
+// 3. Line Chart - working on this now
+        //line chart
+            // 1. show/create axis
+            // 2. display data
 import * as d3 from "d3";
 
 //creating the barDisplay - Bar Chart
