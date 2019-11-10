@@ -3,11 +3,13 @@
 import * as d3 from 'd3';
 
 export default class LineDisplay {
+    //create the line chart - taking parameters from the index.js
     constructor(graphData, lnHolder, lnHeight, lnWidth) {
         this.h = lnHeight;
         this.w = lnWidth;
         this.holder = lnHolder;
         this.temp = graphData;
+        //creating the line based on years and temperature
         this.lineFun = d3.line()
             .x(d => (d.year-1970)*30)
             .y(d => (this.h/2) - (d.temp*108))
@@ -16,27 +18,35 @@ export default class LineDisplay {
     }
 
     buildLineChart() {
+        //create the holder for the line chart
         let svg = d3.select(this.holder)
             .attr("width", this.w +300)
             .attr("height", this.h)
+        //create the path that the line follows (created above)
         let viz = svg.append("path")
             .attr("d", this.lineFun(this.temp.data))
+            //adding css attributes 
             .attr("stroke-width","3")
             .attr("stroke","hotpink")
             .attr("fill", "none")
             .attr('transform', 'translate(60, 50)');
+        //create the labels for the chart and position them in the correct spots
         let labels = svg.selectAll("text")
             .data(this.temp.data)
             .enter()
             .append("text")
             .attr('transform', 'translate(60, 50)')
             .text(d => d.temp)
+             //x axis = the years (display all years)
             .attr("x",d => (d.year -1970)  *30 +10)
+            //y axis = the temp
             .attr("y",d => (this.h/2 - d.temp * 108)-10)
+            //css for the label text
             .attr("font-size", "17px")
             .attr("font-family", "sans-serif")
             .attr("text-anchor", "start")
             .attr("dy", "0.35em")
+            //change the font and colour based on the position (0 temp)
             .attr("font-weight",(d, i) => {
                 if (i === 0 || i === (this.temp.data.length - 1)) {
                     return "bold";
