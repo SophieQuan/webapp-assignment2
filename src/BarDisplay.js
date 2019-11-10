@@ -1,102 +1,87 @@
-// SOPHIE & MELLISSA : 
-// NOTE ON LINE 30 FOR YOU GUYS
-// LINE 122 TO CHANGE THE FONTS FOR LABELS
-// LINE 90 TO CHANGE THE COLOURS OF THE BARS USING RGBA
-// TO DO LIST: 
-// 1. Can we make the bars thicker?
-// 2. Add a legend
-// 3. Line Chart - working on this now
-        //line chart
-            // 1. show/create axis
-            // 2. display data
+//Bar Chart Displays Precipitation and Years
+
 import * as d3 from "d3";
 
 //creating the barDisplay - Bar Chart
 export default class BarDisplay {
     //taking the information/properties from index.js
-    constructor(barHolder, barWidth, barHeight, padding) {
+    constructor(graphData, barHolder, barWidth, barHeight, padding){
         this.w = barWidth;
         this.h = barHeight;
         this.padding = padding;
         this.barHolder = barHolder;
-        this.dataset;
-        //since fetch data from index.js is not working - we put it back inside here
-        this.fetchData();
+        this.graphData = graphData;
+        this.buildChart();
     }
-    //starting to build the chart 
-startChart() {
-    //checking to see if the data array is showing up - USED FOR DEBUG
-    //console.log(this.dataset);
+    //starting to build the chart
+    buildChart() {
 
-    // set the width and height og the svg
+    // set the width and height of the svg
     //create the svg as the graph
     let svg = d3.select(this.barHolder)
-        .attr("width", this.w+150)
+        .attr("width", this.w+300)
         //add extra height to show negative values
-        .attr("height", this.h+200);
+        .attr("height", this.h);
+    
+    //get the precip and year values from data.json
+    let precipData = this.graphData.data.map(d=>d.precip);
+    let yearData = this.graphData.data.map(d=>d.year);
 
-    // create the scale of the graph
-    let scale = d3.scaleLinear()
-//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! CAN ANYONE FIGURE THIS OUT???? THESE ARE NOT OUR NUMBERS - cant find the correct range - try google maybe?
-        //the lowest and highest numbers of the temp
-        .domain([-27, 42])
-        //the span(range) of the y axis - allowing the negative numbers to show
-        .range([-81, 126]);
-
-    // add the scale/numbers to the x axis
-    let xScale = d3.scaleLinear()
-        //the domain is the lowest year to the highest year
-        .domain([1970, 2010])
-        //the range is the width of the dataset (year)
-        .range([0, this.w-(this.w / this.dataset.length)]);
-
-    //creating the x axis using the year nums
-    let xAxis = d3.axisBottom(xScale).tickFormat(d3.format('d'));
-
-    //add the scale to the y axis
+    //add the scale to the x axis
+    let xScale = d3.scaleBand()
+        .domain(yearData)
+        .range([0,1200])
+        .paddingInner(0.05);
+        
+    // add the y scale/numbers to the y axis
     let yScale = d3.scaleLinear()
-        //the lowest number for bottom of scale to the highest
-        .domain([-50, 100])
-        //the height of the scale nums
-        .range([this.h - scale(-70), this.h-scale(100)]);
+        .domain(d3.extent(precipData))
+        .range([this.h,0])
 
-    //create the y axis using the scale of the yScale
-    let yAxis = d3.axisLeft(yScale);
+    //create the x axis using the scale of the xScale
+    let xAxis = d3
+        .axisBottom(xScale);
+
+    //creating the y axis using the precip nums
+    let yAxis = d3
+        .axisLeft(yScale)
+        .ticks(20);
+        // .tickFormat(d => d + ' Precip');
 
     // append the new group of the rect (bars)
     svg.append('g')
-        .attr('transform', function(d) {
-            return 'translate(32, -510)';
-        })
+        .attr('transform', 'translate(30, 0)')
         //create the rects
         .selectAll("rect")
             //usse the data
-            .data(this.dataset)
+            .data(this.graphData.data)
             .enter()
             .append("rect")
             //the width position
-            .attr("x", (d, i) => i * (this.w / this.dataset.length))
+            .attr("x", d => xScale(d.year)+25)
             //the height is the precipitation 
             .attr("y", d =>{
                 //get the height by using an if statement in case of neg nums
-                if (d.precip > 0){
-                    return this.h - scale(d.precip);
-                } else {
-                    return this.h;
+                if(d.precip>=0){
+                    return yScale(d.precip)
+                }
+                else{
+                    return yScale(0);	
                 }
             })
             //the width plus the padding
-            .attr("width", this.w / this.dataset.length - this.padding)
+            .attr("width", xScale.bandwidth)
             //change the height by finding the absolute number of the height
-            .attr("height", d => scale(Math.abs(d.precip)))
+            .attr("height", d => Math.abs(yScale(0) - yScale(d.precip)))
             //changing the colours of the bars
             .attr("fill",d => {
                 if (d.precip > 0) {
                     //change it to a brighter colours - pinks
-                    return `rgb(${Math.abs(d.precip)*50},0,130)`;
+                    return `rgb(${Math.abs(d.precip)*255},77,190)`;
+                    
                 } else {
                     //if its less than 0 change the colour to darker colours - orange/fall
-                    return `rgb(${Math.abs(d.precip)*20},140,67)`;
+                    return `rgb(${Math.abs(d.precip)*1},201,161)`;
                 }
             });
 
@@ -107,58 +92,97 @@ startChart() {
         //get all the text
         .selectAll("text")
             //get the data
-            .data(this.dataset)
+            .data(this.graphData.data)
             .enter()
             //make the text go to the proper positions
             .append("text")
-                    //move the text over to be on top the bar - the middle of the bar
-                    .attr('transform', 'translate(30, -510)')
-                    //make the text be the label of the precipitation its on
-                    .text(d => d.precip)
-                    //get the x attribute to be 10 higher than the bar
-                    .attr("x",(d ,i)=> i * (this.w / this.dataset.length)+10)
-                    .attr("y",(d) => {
-                        if (d.precip > 0) {
-                            //make the label 15px lower
-                            return this.h-scale(d.precip)-15;
-                        } else {
-                            //make the label 15 px higher
-                            return this.h-scale(d.precip)+15;
-                        }
-                    })
-                    //change the fill of the labels
-                    .attr("fill", "#7CFC00")
-                    //change the font size
-                    .attr("font-size", "15px")
+                //move the text over to be on top the bar - the middle of the bar
+                .attr('transform', 'translate(60, 0)')
+                //make the text be the label of the precipitation its on
+                .text(d => d.precip)
+                //get the x attribute to be 10 higher than the bar
+                .attr("x",(d ,i)=> i * (this.w / precipData.length + 4.85 ))
+                .attr("y",(d) => {
+                    if (d.precip > 0) {
+                        //make the label 20px lower
+                        return yScale(d.precip)+20;
+                    } else {
+                        //make the label 10 px higher
+                        return yScale(d.precip)-10;
+                    }
+                })
+                //change the fill of the labels
+                .attr("fill", "#454545")
+                //change the font size
+                .attr("font-size", "17px");
+    
+    //define the min data for precip value
+    let minVal = d3.min(precipData);
+    //define the max data for year value
+    let maxVal = d3.max(yearData);
 
     // append the group of nums and insert x axis
-    svg.append('g')
-    .attr('class','xlabel')
-    //move it to bottom of y axis
-    .attr('transform', 'translate(32, 550)')
-    //call the x axis
-    .call(xAxis);
+    svg.append("g")
+        .attr('class','xScale')
+        .attr('transform', 'translate(50, ' + yScale(minVal)+")")
+        //call the x axis
+        .call(xAxis)
+        //add the prescription for xscale
+        .append("text")
+            .attr('transform', 'translate('+ (xScale(maxVal)+80)+ ',15)')
+            .attr("font-size", "18px")
+            .style("text-anchor", "end")
+            .style("fill", "#454545")
+            .text("Year");
+        
 
     // append the group of nums and insert y axis
-    svg.append('g')
-    //move up the page
-    .attr('transform', 'translate(30, -550)')
-    //call the y axis
-    .call(yAxis);
-
+    svg.append("g")
+        .attr('class','yScale')
+        .attr('transform', 'translate(50, 0)')
+        .call(yAxis)
+        //add the prescription for yscale
+        .append("text")
+            .attr("transform", "rotate(-90), translate(-120,-40)")
+            .attr("font-size", "18px")
+            .style("text-anchor", "start")
+            .style("fill", "#454545")
+            .text("Precipitation (%)");
+    
+    //add legend for precipitation
+    //background
+    svg.append("rect")
+        .attr("x",100).
+        attr("y", 5)
+        .attr("width", 250)
+        .attr("height", 80)
+        .attr("fill","#cdcdcd")
+    //2 small circles
+    svg.append("circle")
+        .attr("cx",125)
+        .attr("cy",30)
+        .attr("r", 6)
+        .style("fill", "#ff4dbe")
+    svg.append("circle")
+        .attr("cx",125)
+        .attr("cy",60)
+        .attr("r", 6)
+        .style("fill", "#01c9a1")
+    //text display
+    svg.append("text")
+        .attr("x", 150)
+        .attr("y", 30)
+        .text("Positive Precipitation (%)")
+        .style("font-size", "15px")
+        .attr("alignment-baseline","middle")
+    svg.append("text")
+        .attr("x", 150)
+        .attr("y", 60)
+        .text("Negative Precipitation (%)")
+        .style("font-size", "15px")
+        .attr("alignment-baseline","middle")
+    
     //END OF START CHART
-    }
-
-    //we will fetch the external data here first
-    //fetching all the data from the data.json using an es6 function
-    fetchData(){
-        fetch('data.json')
-        .then(data => data.json())
-        .then(data => {
-            this.dataset = data.data;
-            //start building the chart
-            this.startChart();
-        });
     }
 
  // END OF BAR DISPLAY

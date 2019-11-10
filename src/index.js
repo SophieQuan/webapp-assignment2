@@ -8,7 +8,7 @@
     Created by:
 
     Sabre Harrisson - 100725581
-    Sophie - 
+    Sophie - 100724844
     Melissa Khan - 
 */
 //IMPORT BAR AND LINE DISPLAYS
@@ -16,21 +16,32 @@ import BarDisplay from './BarDisplay';
 import LineDisplay from './LineDisplay';
 
 //BAR DISPLAY GRAPH INFORMATION
+let graphData;
+let graphHolder;
+let lineHolder;
 let barWidth = 1000;
-let barHeight = 900;
-let barPadding = 10;
+let barHeight = 800;
+let barPadding = 2;
 let barHolder = "#barSpace";
 
 //LINE DISPLAY CHART INFORMATION
 let lnHolder = "#lineSpace";
-let lnHeight = 1000;
-let lnWidth = 900;
-
-//CREATING THE CHARTS IN THE HTML PAGE
-//bar display chart - with respective properties
-let newBarHolder = new BarDisplay(barHolder, barWidth, barHeight, barPadding);
-//line display chart  - with respective properties
-let newLineHolder = new LineDisplay(lnHolder, lnHeight, lnWidth);
+let lnHeight = 900;
+let lnWidth = 1000;
 
 
+//function start the charts
+function startChart(){
+    console.log('lets make a chart');
+    graphHolder = new BarDisplay(graphData, barHolder, barWidth, barHeight, barPadding);
+    lineHolder = new LineDisplay(graphData,lnHolder, lnHeight, lnWidth);
+}
 
+//external data
+fetch('data.json')
+    .then(data => data.json())
+    .then(data => {
+        graphData = data;
+        // console.log(graphData);
+        startChart();
+});
