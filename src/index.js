@@ -9,7 +9,7 @@
 
     Sabre Harrisson - 100725581
     Sophie - 100724844
-    Melissa Khan - 
+    Melissa Khan - 100708543
 */
 //IMPORT BAR AND LINE DISPLAYS
 import BarDisplay from './BarDisplay';
