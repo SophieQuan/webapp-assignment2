@@ -12,7 +12,7 @@ export default class LineDisplay {
         //creating the line based on years and temperature
         this.lineFun = d3.line()
             .x(d => (d.year-1970)*30)
-            .y(d => (this.h/2) - (d.temp*108))
+            .y(d => (this.h/2) - (d.temp*54))
             .curve(d3.curveMonotoneX)
         this.buildLineChart();
     }
@@ -21,7 +21,7 @@ export default class LineDisplay {
         //create the holder for the line chart
         let svg = d3.select(this.holder)
             .attr("width", this.w +300)
-            .attr("height", this.h)
+             .attr("height", this.h/2 + 50)
         //create the path that the line follows (created above)
         let viz = svg.append("path")
             .attr("d", this.lineFun(this.temp.data))
@@ -29,18 +29,17 @@ export default class LineDisplay {
             .attr("stroke-width","3")
             .attr("stroke","hotpink")
             .attr("fill", "none")
-            .attr('transform', 'translate(60, 50)');
+            .attr('transform', 'translate(60, -150)');
         //create the labels for the chart and position them in the correct spots
         let labels = svg.selectAll("text")
             .data(this.temp.data)
             .enter()
             .append("text")
-            .attr('transform', 'translate(60, 50)')
-            .text(d => d.temp)
+            .attr('transform', 'translate(60, -150)')
              //x axis = the years (display all years)
             .attr("x",d => (d.year -1970)  *30 +10)
             //y axis = the temp
-            .attr("y",d => (this.h/2 - d.temp * 108)-10)
+            .attr("y",d => (this.h/2 - d.temp * 54)-10)
             //css for the label text
             .attr("font-size", "17px")
             .attr("font-family", "sans-serif")
