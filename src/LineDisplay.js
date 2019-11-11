@@ -115,7 +115,7 @@ export default class LineDisplay {
             .call(yAxis)
             //add the prescription for yscale
             .append("text")
-                .attr("transform", "rotate(-90), translate(-140,-40)")
+                .attr("transform", "rotate(-90), translate(-500,-40)")
                 .attr("font-size", "18px")
                 .style("text-anchor", "start")
                 .style("fill", "#454545")
