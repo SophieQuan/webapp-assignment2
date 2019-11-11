@@ -3,49 +3,40 @@
 import * as d3 from 'd3';
 
 export default class LineDisplay {
-    //create the line chart - taking parameters from the index.js
     constructor(graphData, lnHolder, lnHeight, lnWidth) {
         this.h = lnHeight;
         this.w = lnWidth;
         this.holder = lnHolder;
         this.temp = graphData;
-        //creating the line based on years and temperature
         this.lineFun = d3.line()
             .x(d => (d.year-1970)*30)
-            .y(d => (this.h/2) - (d.temp*54))
+            .y(d => (this.h/2) - (d.temp*108))
             .curve(d3.curveMonotoneX)
         this.buildLineChart();
     }
 
     buildLineChart() {
-        //create the holder for the line chart
         let svg = d3.select(this.holder)
             .attr("width", this.w +300)
-             .attr("height", this.h/2 + 50)
-        //create the path that the line follows (created above)
+            .attr("height", this.h)
         let viz = svg.append("path")
             .attr("d", this.lineFun(this.temp.data))
-            //adding css attributes 
             .attr("stroke-width","3")
             .attr("stroke","hotpink")
             .attr("fill", "none")
-            .attr('transform', 'translate(60, -150)');
-        //create the labels for the chart and position them in the correct spots
+            .attr('transform', 'translate(60, 50)');
         let labels = svg.selectAll("text")
             .data(this.temp.data)
             .enter()
             .append("text")
-            .attr('transform', 'translate(60, -150)')
-             //x axis = the years (display all years)
+            .attr('transform', 'translate(60, 50)')
+            .text(d => d.temp)
             .attr("x",d => (d.year -1970)  *30 +10)
-            //y axis = the temp
-            .attr("y",d => (this.h/2 - d.temp * 54)-10)
-            //css for the label text
+            .attr("y",d => (this.h/2 - d.temp * 108)-10)
             .attr("font-size", "17px")
             .attr("font-family", "sans-serif")
             .attr("text-anchor", "start")
             .attr("dy", "0.35em")
-            //change the font and colour based on the position (0 temp)
             .attr("font-weight",(d, i) => {
                 if (i === 0 || i === (this.temp.data.length - 1)) {
                     return "bold";
@@ -93,7 +84,11 @@ export default class LineDisplay {
         let maxVal = d3.max(yearData);
 
         //append the group of nums and insert x axis
-        //add the label for xscale
+        svg.append('g')
+            .attr('class','xScale')
+            .attr('transform', 'translate(50, ' + yScale(minVal) +")")
+            .call(xAxis);
+        //add the prescription for xscale
         svg.append("g")
             .attr('class','xScale')
             .attr('transform', 'translate(50, ' + yScale(minVal)+")")
@@ -101,7 +96,7 @@ export default class LineDisplay {
             .call(xAxis)
             //add the prescription for xscale
             .append("text")
-                .attr('transform', 'translate(600,40)')
+                .attr('transform', 'translate(600,45)')
                 .attr("font-size", "18px")
                 .style("text-anchor", "end")
                 .style("fill", "#454545")
