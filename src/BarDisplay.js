@@ -129,7 +129,7 @@ export default class BarDisplay {
         .call(xAxis)
         //add the prescription for xscale
         .append("text")
-            .attr('transform', 'translate('+ (xScale(maxVal)+80)+ ',15)')
+            .attr('transform', 'translate(600,40)'))
             .attr("font-size", "18px")
             .style("text-anchor", "end")
             .style("fill", "#454545")
