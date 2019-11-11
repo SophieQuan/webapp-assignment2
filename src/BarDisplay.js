@@ -143,7 +143,7 @@ export default class BarDisplay {
         .call(yAxis)
         //add the prescription for yscale
         .append("text")
-            .attr("transform", "rotate(-90), translate(-120,-40)")
+            .attr("transform", "rotate(-90), translate(-500,-40)")
             .attr("font-size", "18px")
             .style("text-anchor", "start")
             .style("fill", "#454545")
