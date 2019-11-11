@@ -19,9 +19,9 @@ export default class BarDisplay {
     // set the width and height of the svg
     //create the svg as the graph
     let svg = d3.select(this.barHolder)
-        .attr("width", this.w+300)
+        .attr("width", this.w+400)
         //add extra height to show negative values
-        .attr("height", this.h);
+        .attr("height", this.h +20);
     
     //get the precip and year values from data.json
     let precipData = this.graphData.data.map(d=>d.precip);
@@ -30,7 +30,7 @@ export default class BarDisplay {
     //add the scale to the x axis
     let xScale = d3.scaleBand()
         .domain(yearData)
-        .range([0,1200])
+        .range([0,1400])
         .paddingInner(0.05);
         
     // add the y scale/numbers to the y axis
@@ -58,7 +58,7 @@ export default class BarDisplay {
             .enter()
             .append("rect")
             //the width position
-            .attr("x", d => xScale(d.year)+25)
+            .attr("x", d => xScale(d.year)-10)
             //the height is the precipitation 
             .attr("y", d =>{
                 //get the height by using an if statement in case of neg nums
@@ -97,11 +97,11 @@ export default class BarDisplay {
             //make the text go to the proper positions
             .append("text")
                 //move the text over to be on top the bar - the middle of the bar
-                .attr('transform', 'translate(60, 0)')
+                .attr('transform', 'translate(30, 0)')
                 //make the text be the label of the precipitation its on
                 .text(d => d.precip)
                 //get the x attribute to be 10 higher than the bar
-                .attr("x",(d ,i)=> i * (this.w / precipData.length + 4.85 ))
+                .attr("x",(d ,i)=> i * (this.w / precipData.length + 9.6 ))
                 .attr("y",(d) => {
                     if (d.precip > 0) {
                         //make the label 20px lower
@@ -124,13 +124,14 @@ export default class BarDisplay {
     // append the group of nums and insert x axis
     svg.append("g")
         .attr('class','xScale')
-        .attr('transform', 'translate(50, ' + yScale(minVal)+")")
+        .attr('transform', 'translate(20, ' + yScale(minVal)+")")
         //call the x axis
         .call(xAxis)
+        .style("font-size","13px")
         //add the prescription for xscale
         .append("text")
-            .attr('transform', 'translate(600,40)')
-            .attr("font-size", "18px")
+            .attr('transform', 'translate(700,50)')
+            .attr("font-size", "20px")
             .style("text-anchor", "end")
             .style("fill", "#454545")
             .text("Year");
@@ -139,13 +140,14 @@ export default class BarDisplay {
     // append the group of nums and insert y axis
     svg.append("g")
         .attr('class','yScale')
-        .attr('transform', 'translate(50, 0)')
+        .attr('transform', 'translate(20, 0)')
         .call(yAxis)
+        .style("font-size","13px")
         //add the prescription for yscale
         .append("text")
-            .attr("transform", "rotate(-90), translate(-500,-40)")
-            .attr("font-size", "18px")
-            .style("text-anchor", "start")
+            .attr("transform", "rotate(-90), translate(-200,-40)")
+            .attr("font-size", "20px")
+            .style("text-anchor", "end")
             .style("fill", "#454545")
             .text("Precipitation (%)");
     
